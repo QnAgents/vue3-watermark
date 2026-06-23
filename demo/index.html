@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>vue3-watermark Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      background: #f2f2f7;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+    .demo-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8e8e93;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+    }
+    .article { display: flex; }
+    .article-cover { flex: 0 0 220px; height: 300px; object-fit: cover; display: block; }
+    .article-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .tag { font-size: 11px; font-weight: 700; color: #8e44ad; letter-spacing: .07em; text-transform: uppercase; }
+    .title { font-size: 18px; font-weight: 700; color: #1c1c1e; line-height: 1.35; }
+    .meta  { font-size: 12px; color: #aeaeb2; }
+    .body  { font-size: 13px; color: #3a3a3c; line-height: 1.8; }
+    hr.divider { border: none; border-top: 1px solid #f2f2f7; margin: 2px 0; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 190px 150px; gap: 3px; }
+    .grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .grid img:first-child { grid-row: 1 / 3; }
+    .caption { padding: 14px 18px; font-size: 12px; color: #636366; }
+    .doc-dark { background: #1c1c1e; padding: 28px 32px; display: flex; flex-direction: column; gap: 14px; }
+    .doc-dark .doc-title { font-size: 20px; font-weight: 700; color: #fff; }
+    .doc-dark .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(255,59,48,.2); color: #ff453a; letter-spacing: .07em; }
+    .doc-dark p { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.75; }
+    .stats { display: flex; gap: 24px; margin-top: 4px; }
+    .stat-num { font-size: 22px; font-weight: 700; color: #fff; }
+    .stat-lbl { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- ① 单行提示语，-38° 默认角度 -->
+<div>
+  <div class="demo-label">① 默认角度 -38° · 单行提示语</div>
+  <div class="card article" id="demo1">
+    <img class="article-cover" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=440&q=80" alt="">
+    <div class="article-body">
+      <span class="tag">内部文件 · 机密</span>
+      <div class="title">2024 年度战略规划报告<br>第三季度执行摘要</div>
+      <div class="meta">作者：张三丰 · 2024-09-01 · 仅限内部传阅</div>
+      <hr class="divider">
+      <p class="body">本报告综合分析了公司在过去三个季度的核心业务指标，重点评估了市场扩张策略的执行情况及潜在风险。数据显示，华东区域增长超出预期，但西部市场仍需重点投入。</p>
+      <p class="body">建议管理层在 Q4 优先推进供应链优化项目，同时加快数字化转型路线图的落地，以应对竞争态势的变化。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ② 多行提示语，数组换行 -->
+<div>
+  <div class="demo-label">② 多行提示语 · 数组换行 · -38°</div>
+  <div class="card article" id="demo2">
+    <img class="article-cover" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=440&q=80" alt="">
+    <div class="article-body">
+      <span class="tag">草稿 · 待审核</span>
+      <div class="title">新产品发布会策划方案<br>初稿 v0.3</div>
+      <div class="meta">编辑：李四 · 009988 · 最后修改 2024-10-12</div>
+      <hr class="divider">
+      <p class="body">本方案为产品发布会策划初稿，尚未经过审批流程。内容可能存在重大调整，请勿将此版本对外分享或引用。正式版本将在内部评审后另行通知。</p>
+      <p class="body">预计活动规模：300 人，时间：2024 年 11 月，地点待定。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 自定义角度 -25°，图片内容 -->
+<div>
+  <div class="demo-label">③ 自定义角度 -25° · 图片内容</div>
+  <div class="card" id="demo3">
+    <div class="grid">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80" alt="">
+      <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&q=80" alt="">
+      <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&q=80" alt="">
+      <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&q=80" alt="">
+      <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=300&q=80" alt="">
+    </div>
+    <div class="caption">项目现场勘察影像记录 · 编号 PRJ-2024-089 · 未经授权禁止外传</div>
+  </div>
+</div>
+
+<!-- ④ -45° 暗色文档 + 多行提示语，rotate: 0 -->
+<div>
+  <div class="demo-label">④ -45° · 暗色文档 · 提示语 rotate: 0</div>
+  <div class="card doc-dark" id="demo4">
+    <span class="badge">CONFIDENTIAL</span>
+    <div class="doc-title">Q3 财务数据摘要</div>
+    <p>以下数据来源于内部财务系统，仅供高级管理层参阅。未经 CFO 书面授权，严禁以任何形式对外披露或复制。</p>
+    <div class="stats">
+      <div><div class="stat-num">¥ 2.4B</div><div class="stat-lbl">季度营收</div></div>
+      <div><div class="stat-num">+18.6%</div><div class="stat-lbl">同比增长</div></div>
+      <div><div class="stat-num">34.2%</div><div class="stat-lbl">毛利率</div></div>
+      <div><div class="stat-num">¥ 380M</div><div class="stat-lbl">净利润</div></div>
+    </div>
+    <p>核心风险提示：汇率波动对出口业务影响约 ±3%，原材料成本上涨预计在 Q4 带来 1.2% 的毛利率压力。</p>
+  </div>
+</div>
+
+<!-- ⑤ 纯阵列，-15° -->
+<div>
+  <div class="demo-label">⑤ 纯阵列 · -15° · 无提示语</div>
+  <div class="card article" id="demo5">
+    <img class="article-cover" src="https://images.unsplash.com/photo-1447433589675-4aaa569f3e05?w=440&q=80" alt="">
+    <div class="article-body">
+      <span class="tag">研究报告</span>
+      <div class="title">全球气候变化与企业<br>碳中和路线图研究</div>
+      <div class="meta">研究员：王小明 · 012345 · 2024-08-15</div>
+      <hr class="divider">
+      <p class="body">本研究基于 IPCC 第六次评估报告及 147 家跨国企业的碳排放数据，系统分析了企业实现碳中和目标的可行路径与主要障碍，提供参考建议。</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+const DEFAULT_CARD_COLOR         = 'rgba(217, 227, 255, 0.6)'
+const DEFAULT_CARD_GAP_X         = 8
+const DEFAULT_CARD_FONT_SIZE     = 14
+const DEFAULT_ROW_CARD_GAP       = 80
+const DEFAULT_ARRAY_ROW_GAP      = 60
+const DEFAULT_ARRAY_ROW_OFFSET_X = 20
+const DEFAULT_ARRAY_ROTATE       = -38
+const DEFAULT_HINT_FONT_SIZE     = 24
+const DEFAULT_HINT_FONT_WEIGHT   = 'bold'
+const DEFAULT_HINT_ROTATE        = -38
+const DEFAULT_HINT_BORDER_RADIUS = 10
+const DEFAULT_HINT_PADDING_X     = 40
+const DEFAULT_HINT_PADDING_Y     = 20
+
+const _cvs = document.createElement('canvas')
+const _ctx = _cvs.getContext('2d')
+function measureText(text, fontSize, fontWeight = 'normal') {
+  _ctx.font = `${fontWeight} ${fontSize}px sans-serif`
+  return _ctx.measureText(text).width
+}
+function escapeXml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+function toLines(content) {
+  return Array.isArray(content) ? content : content.split('\n')
+}
+function getHintRect(width, height, opts) {
+  const { hint } = opts
+  if (!hint) return null
+  const fontSize     = hint.fontSize     ?? DEFAULT_HINT_FONT_SIZE
+  const fontWeight   = hint.fontWeight   ?? DEFAULT_HINT_FONT_WEIGHT
+  const paddingX     = hint.paddingX     ?? DEFAULT_HINT_PADDING_X
+  const paddingY     = hint.paddingY     ?? DEFAULT_HINT_PADDING_Y
+  const borderRadius = hint.borderRadius ?? DEFAULT_HINT_BORDER_RADIUS
+  const rotate       = hint.rotate       ?? DEFAULT_HINT_ROTATE
+  const lineHeight   = hint.lineHeight   ?? fontSize * 1.6
+  const lines        = toLines(hint.content)
+  const maxLineW     = Math.max(...lines.map(l => measureText(l, fontSize, fontWeight)))
+  const rectW        = maxLineW + paddingX * 2
+  const textBlockH   = lines.length === 1 ? fontSize : lineHeight * (lines.length - 1) + fontSize
+  const rectH        = textBlockH + paddingY * 2
+  return { cx: width/2, cy: height/2, rectW, rectH, borderRadius, rotate, fontSize, fontWeight, lineHeight, lines }
+}
+function buildRow(width, y, offsetX, opts) {
+  const { card, row } = opts
+  const fontSize = card.fontSize ?? DEFAULT_CARD_FONT_SIZE
+  const color    = card.color   ?? DEFAULT_CARD_COLOR
+  const gapX     = card.gapX   ?? DEFAULT_CARD_GAP_X
+  const cardGap  = row?.cardGap ?? DEFAULT_ROW_CARD_GAP
+  const nameW    = measureText(card.name, fontSize)
+  const idW      = measureText(card.id, fontSize)
+  const stepW    = nameW + gapX + idW + cardGap
+  const startX   = -(stepW - (offsetX % stepW))
+  const out = []
+  for (let x = startX; x < width * 1.5; x += stepW) {
+    out.push(`<text x="${x.toFixed(1)}" y="${y}" font-size="${fontSize}" fill="${color}" font-family="sans-serif" dominant-baseline="middle">${escapeXml(card.name)}</text>`)
+    out.push(`<text x="${(x+nameW+gapX).toFixed(1)}" y="${y}" font-size="${fontSize}" fill="${color}" font-family="sans-serif" dominant-baseline="middle">${escapeXml(card.id)}</text>`)
+  }
+  return out.join('\n')
+}
+function buildArray(width, height, opts) {
+  const rowGap      = opts.array?.rowGap     ?? DEFAULT_ARRAY_ROW_GAP
+  const rowOffsetX  = opts.array?.rowOffsetX ?? DEFAULT_ARRAY_ROW_OFFSET_X
+  const rotate      = opts.array?.rotate     ?? DEFAULT_ARRAY_ROTATE
+  const fontSize    = opts.card.fontSize     ?? DEFAULT_CARD_FONT_SIZE
+  const cardOpacity = opts.card.opacity      ?? 1
+  const diag = Math.sqrt(width*width + height*height)
+  const cx = width/2, cy = height/2
+  const rows = []
+  let ri = 0
+  for (let y = -(diag-height)/2 + fontSize; y < height + (diag-height)/2; y += rowGap+fontSize, ri++) {
+    rows.push(buildRow(width+(diag-width), y, ri*rowOffsetX, opts))
+  }
+  const hr = getHintRect(width, height, opts)
+  let defs = '', maskAttr = ''
+  if (hr) {
+    defs = `<defs><mask id="hk">
+  <rect width="${width}" height="${height}" fill="white"/>
+  <rect x="${(hr.cx-hr.rectW/2).toFixed(1)}" y="${(hr.cy-hr.rectH/2).toFixed(1)}" width="${hr.rectW.toFixed(1)}" height="${hr.rectH.toFixed(1)}" rx="${hr.borderRadius}" fill="black" transform="rotate(${hr.rotate},${hr.cx.toFixed(1)},${hr.cy.toFixed(1)})"/>
+</mask></defs>`
+    maskAttr = ' mask="url(#hk)"'
+  }
+  return `${defs}
+<g${maskAttr} opacity="${cardOpacity}">
+  <g transform="rotate(${rotate},${cx.toFixed(1)},${cy.toFixed(1)})" style="overflow:visible">
+${rows.join('\n')}
+  </g>
+</g>`
+}
+function buildHint(width, height, opts) {
+  if (!opts.hint) return ''
+  const hr          = getHintRect(width, height, opts)
+  const color       = opts.hint.color   ?? opts.card.color ?? DEFAULT_CARD_COLOR
+  const hintOpacity = opts.hint.opacity ?? 1
+  const totalH      = hr.lines.length === 1 ? hr.fontSize : hr.lineHeight*(hr.lines.length-1)+hr.fontSize
+  const topY        = hr.cy - totalH/2 + hr.fontSize/2
+  const textEls = hr.lines.map((line, i) =>
+    `  <text x="${hr.cx.toFixed(1)}" y="${(topY+i*hr.lineHeight).toFixed(1)}" font-size="${hr.fontSize}" font-weight="${hr.fontWeight}" fill="${color}" font-family="sans-serif" text-anchor="middle" dominant-baseline="middle">${escapeXml(line)}</text>`
+  )
+  return `<g transform="rotate(${hr.rotate},${hr.cx.toFixed(1)},${hr.cy.toFixed(1)})" opacity="${hintOpacity}">
+${textEls.join('\n')}
+</g>`
+}
+function generateDataURL(w, h, opts) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:hidden">
+${buildArray(w, h, opts)}
+${buildHint(w, h, opts)}
+</svg>`
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)))
+}
+
+const wmMap = new WeakMap()
+function setOverlayStyle(div, dataUrl, opacity, zIndex) {
+  const s = div.style
+  s.setProperty('position',          'absolute',          'important')
+  s.setProperty('inset',             '0',                 'important')
+  s.setProperty('pointer-events',    'none',              'important')
+  s.setProperty('z-index',           String(zIndex),      'important')
+  s.setProperty('opacity',           String(opacity),     'important')
+  s.setProperty('background-image',  `url("${dataUrl}")`, 'important')
+  s.setProperty('background-size',   '100% 100%',         'important')
+  s.setProperty('background-repeat', 'no-repeat',         'important')
+}
+function applyWatermark(el, opts) {
+  const w       = el.offsetWidth  || 600
+  const h       = el.offsetHeight || 300
+  const opacity = opts.opacity ?? 0.1
+  const zIndex  = opts.zIndex  ?? 2147483647
+  const url     = generateDataURL(w, h, opts)
+  const existing = wmMap.get(el)
+  if (existing) { setOverlayStyle(existing, url, opacity, zIndex); return }
+  if (getComputedStyle(el).position === 'static') el.style.position = 'relative'
+  el.style.setProperty('isolation', 'isolate', 'important')
+  const div = document.createElement('div')
+  div.setAttribute('aria-hidden', 'true')
+  setOverlayStyle(div, url, opacity, zIndex)
+  el.appendChild(div)
+  wmMap.set(el, div)
+}
+
+applyWatermark(document.getElementById('demo1'), {
+  opacity: 0.12,
+  card:  { name: '张三丰', id: '023490', color: '#6a0dad' },
+  array: { rowGap: 55, rowOffsetX: 20, rotate: -38 },
+  hint:  { content: '仅供内部使用', color: '#6a0dad' },
+})
+applyWatermark(document.getElementById('demo2'), {
+  opacity: 0.13,
+  card:  { name: '李四', id: '009988', color: '#c0392b' },
+  array: { rowGap: 55, rowOffsetX: 20, rotate: -38 },
+  hint:  { content: ['草稿文件', '未经审批'], color: '#c0392b', fontSize: 22, lineHeight: 36 },
+})
+applyWatermark(document.getElementById('demo3'), {
+  opacity: 0.15,
+  card:  { name: '张三丰', id: '023490', color: '#1c1c1e' },
+  array: { rowGap: 55, rowOffsetX: 20, rotate: -25 },
+  hint:  { content: '禁止外传\n内部资料', color: '#1c1c1e', fontSize: 20, lineHeight: 32, rotate: -25 },
+})
+applyWatermark(document.getElementById('demo4'), {
+  opacity: 0.18,
+  card:  { name: 'Zhang Sanfeng', id: '023490', color: '#ffffff' },
+  array: { rowGap: 50, rowOffsetX: 30, rotate: -45 },
+  hint:  { content: 'CONFIDENTIAL\nDO NOT DISTRIBUTE', color: '#ff453a', fontSize: 18, lineHeight: 30, rotate: 0 },
+})
+applyWatermark(document.getElementById('demo5'), {
+  opacity: 0.1,
+  card:  { name: '王小明', id: '012345', color: '#0066cc' },
+  array: { rowGap: 60, rowOffsetX: 15, rotate: -15 },
+})
+</script>
+</body>
+</html>
